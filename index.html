@@ -3,37 +3,52 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Halloween Melting Text Poster</title>
+    <title>Halloween Melting Text Poster - Mobile Optimized</title>
 
-    <!-- Rubik Wet Paint 구글 폰트 -->
+    <!-- Rubik Wet Paint 폰트 -->
     <link
       href="https://fonts.googleapis.com/css2?family=Rubik+Wet+Paint&display=swap"
       rel="stylesheet"
     />
 
     <style>
-      body {
+      body,
+      html {
         margin: 0;
-        height: 100vh;
-        background: radial-gradient(circle at center, #0b0b0b 0%, #000 100%);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        color: white;
+        height: 100%;
         font-family: 'Rubik Wet Paint', cursive;
+        overflow: hidden;
+        background: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
 
-      .poster-container {
-        position: relative;
+      /* 웹캠 화면 */
+      #video {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
-        overflow: hidden;
-        padding: 20vh 5vw 0 5vw; /* 위쪽 공간 확보 */
+        object-fit: cover;
+        z-index: 1;
+        filter: brightness(0.5);
+      }
+
+      /* 텍스트 포스터 */
+      .poster-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         display: flex;
-        align-items: flex-start; /* 글자 아래쪽 시작 */
+        flex-wrap: wrap;
         justify-content: center;
+        align-items: center;
+        z-index: 2;
+        pointer-events: none;
+        text-align: center;
       }
 
       .poster {
@@ -41,9 +56,9 @@
         flex-wrap: wrap;
         justify-content: center;
         align-items: flex-end;
-        font-size: clamp(30px, 8vw, 100px); /* 반응형 글자 크기 */
+        font-size: clamp(30px, 10vw, 120px);
         color: #ff6600;
-        line-height: 0.9; /* 글자 겹침 방지 */
+        line-height: 0.9;
       }
 
       .letter {
@@ -54,19 +69,42 @@
       }
 
       @keyframes melt {
-        0% { transform: scaleY(1); }
-        10% { transform: scaleY(1.1); }
-        20% { transform: scaleY(1.3); }
-        30% { transform: scaleY(1.5); }
-        40% { transform: scaleY(1.7) rotate(-0.5deg); }
-        50% { transform: scaleY(2) rotate(0.3deg); }
-        60% { transform: scaleY(2.3) rotate(-0.2deg); }
-        70% { transform: scaleY(2.5) rotate(0.5deg); }
-        80% { transform: scaleY(2.7) rotate(-0.3deg); }
-        90% { transform: scaleY(2.9) rotate(0.2deg); }
-        100% { transform: scaleY(3) rotate(0deg); } /* 모바일 최적화 */
+        0% {
+          transform: scaleY(1);
+        }
+        10% {
+          transform: scaleY(1.1);
+        }
+        20% {
+          transform: scaleY(1.3);
+        }
+        30% {
+          transform: scaleY(1.5);
+        }
+        40% {
+          transform: scaleY(1.7) rotate(-0.5deg);
+        }
+        50% {
+          transform: scaleY(2) rotate(0.3deg);
+        }
+        60% {
+          transform: scaleY(2.3) rotate(-0.2deg);
+        }
+        70% {
+          transform: scaleY(2.5) rotate(0.5deg);
+        }
+        80% {
+          transform: scaleY(2.7) rotate(-0.3deg);
+        }
+        90% {
+          transform: scaleY(2.9) rotate(0.2deg);
+        }
+        100% {
+          transform: scaleY(3) rotate(0deg);
+        }
       }
 
+      /* 컨트롤 */
       .controls {
         position: fixed;
         bottom: 20px;
@@ -75,39 +113,65 @@
         gap: 10px;
         width: 90%;
         max-width: 400px;
-        z-index: 10;
+        z-index: 3;
+      }
+
+      input,
+      button {
+        font-family: 'Rubik Wet Paint', cursive;
+        font-size: clamp(16px, 4vw, 24px);
+        padding: 8px 16px;
+        border-radius: 10px;
+        outline: none;
       }
 
       input {
         background: rgba(0, 0, 0, 0.6);
         border: 2px solid #ff6600;
-        color: #fff;
-        font-family: 'Rubik Wet Paint', cursive;
-        font-size: clamp(16px, 4vw, 24px); /* 반응형 글자 크기 */
-        padding: 8px 16px;
-        border-radius: 10px;
+        color: white;
         text-align: center;
-        outline: none;
+      }
+
+      button {
+        background: #ff6600;
+        border: none;
+        color: black;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      button:hover {
+        background: #ffa500;
       }
     </style>
   </head>
   <body>
+    <!-- 웹캠 -->
+    <video id="video" autoplay playsinline></video>
+
+    <!-- 텍스트 포스터 -->
     <div class="poster-container">
       <div id="poster" class="poster"></div>
     </div>
 
+    <!-- 컨트롤 -->
     <div class="controls">
       <input
         type="text"
         id="textInput"
         placeholder="Type your spooky text..."
       />
+      <button id="saveBtn">💀 Save PNG</button>
     </div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
       const poster = document.getElementById('poster');
       const input = document.getElementById('textInput');
+      const video = document.getElementById('video');
+      const saveBtn = document.getElementById('saveBtn');
 
+      // 텍스트 입력
       input.addEventListener('input', () => {
         const text = input.value.toUpperCase();
         poster.innerHTML = '';
@@ -120,11 +184,21 @@
         });
       });
 
-      // html2canvas 로드
-      const script = document.createElement('script');
-      script.src =
-        'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-      document.body.appendChild(script);
+      // 웹캠 시작
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then((stream) => (video.srcObject = stream))
+        .catch((err) => console.log('웹캠 오류:', err));
+
+      // PNG 저장
+      saveBtn.addEventListener('click', () => {
+        html2canvas(document.body, { backgroundColor: null }).then((canvas) => {
+          const link = document.createElement('a');
+          link.download = 'halloween_poster.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        });
+      });
     </script>
   </body>
 </html>
