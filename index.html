@@ -4,9 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Halloween Melting Text Poster</title>
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
 
+    <!-- Rubik Wet Paint 구글 폰트 링크 -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik+Wet+Paint&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
       body {
         margin: 0;
         height: 100vh;
@@ -17,7 +22,7 @@
         justify-content: center;
         overflow: hidden;
         color: white;
-        font-family: 'Creepster', cursive;
+        font-family: 'Rubik Wet Paint', cursive;
       }
 
       .poster-container {
@@ -29,39 +34,55 @@
       }
 
       .poster {
-        position: absolute;
-        top: 25%;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 12vw;
-        color: #ff6600;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        pointer-events: none;
-        line-height: 1;
+        align-items: flex-end;
+        font-size: 8vw;
+        color: #ff6600;
+        font-family: 'Rubik Wet Paint', cursive;
       }
 
       .letter {
         display: inline-block;
         position: relative;
         transform-origin: top center;
-        animation: melt 5s ease-in-out forwards;
-        text-shadow: none; /* 블러 느낌 제거 */
+        animation: melt 6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
       }
 
       @keyframes melt {
         0% {
-          transform: scaleY();
+          transform: scaleY(1);
         }
-        40% {
+        10% {
+          transform: scaleY(1.2);
+        }
+        20% {
           transform: scaleY(1.5);
         }
+        30% {
+          transform: scaleY(1.8);
+        }
+        40% {
+          transform: scaleY(2.2) rotate(-0.5deg);
+        }
+        50% {
+          transform: scaleY(2.7) rotate(0.3deg);
+        }
+        60% {
+          transform: scaleY(3.2) rotate(-0.2deg);
+        }
         70% {
-          transform: scaleY(3);
+          transform: scaleY(3.7) rotate(0.5deg);
+        }
+        80% {
+          transform: scaleY(4.2) rotate(-0.3deg);
+        }
+        90% {
+          transform: scaleY(4.6) rotate(0.2deg);
         }
         100% {
-          transform: scaleY(4.5);
+          transform: scaleY(5) rotate(0deg);
         }
       }
 
@@ -80,8 +101,8 @@
         background: rgba(0, 0, 0, 0.6);
         border: 2px solid #ff6600;
         color: #fff;
-        font-family: 'Creepster', cursive;
-        font-size: 5vw;
+        font-family: 'Rubik Wet Paint', cursive;
+        font-size: 2vw;
         padding: 8px 16px;
         border-radius: 10px;
         text-align: center;
@@ -90,11 +111,10 @@
 
       @media (min-width: 768px) {
         .poster {
-          font-size: 140px;
+          font-size: 100px;
         }
-        input,
-        button {
-          font-size: 1.8rem;
+        input {
+          font-size: 1.5rem;
         }
       }
     </style>
@@ -115,7 +135,6 @@
     <script>
       const poster = document.getElementById('poster');
       const input = document.getElementById('textInput');
-      const saveBtn = document.getElementById('saveBtn');
 
       input.addEventListener('input', () => {
         const text = input.value.toUpperCase();
@@ -124,7 +143,7 @@
           const span = document.createElement('span');
           span.textContent = char === ' ' ? '\u00A0' : char;
           span.classList.add('letter');
-          span.style.animationDelay = `${index * 0.15}s`;
+          span.style.animationDelay = `${index * 0.1 + Math.random() * 0.3}s`;
           poster.appendChild(span);
         });
       });
@@ -136,4 +155,5 @@
     </script>
   </body>
 </html>
+
 
