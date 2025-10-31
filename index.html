@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Halloween Melting Text Poster - Mobile Optimized</title>
+    <title>Halloween Melting Text Poster - Ellipse UI</title>
 
     <!-- Rubik Wet Paint 폰트 -->
     <link
@@ -17,38 +17,24 @@
         margin: 0;
         height: 100%;
         font-family: 'Rubik Wet Paint', cursive;
-        overflow: hidden;
         background: #000;
         display: flex;
-        justify-content: center;
+        flex-direction: column;
         align-items: center;
+        justify-content: flex-start; /* 상단 기준으로 정렬 */
+        color: white;
+        overflow: hidden;
       }
 
-      /* 웹캠 화면 */
-      #video {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        z-index: 1;
-        filter: brightness(0.5);
-      }
-
-      /* 텍스트 포스터 */
+      /* 상단 텍스트 (입력값 표시) */
       .poster-container {
-        position: absolute;
-        top: 50%;
+        position: fixed;
+        top: 10%; /* 화면 상단에서 떨어진 위치 */
         left: 50%;
-        transform: translate(-50%, -50%);
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        align-items: center;
-        z-index: 2;
-        pointer-events: none;
+        transform: translateX(-50%);
+        z-index: 5;
         text-align: center;
+        pointer-events: none;
       }
 
       .poster {
@@ -56,7 +42,7 @@
         flex-wrap: wrap;
         justify-content: center;
         align-items: flex-end;
-        font-size: clamp(30px, 10vw, 120px);
+        font-size: clamp(40px, 10vw, 120px);
         color: #ff6600;
         line-height: 0.9;
       }
@@ -65,113 +51,97 @@
         display: inline-block;
         position: relative;
         transform-origin: top center;
-        animation: melt 6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        animation: melt 6s cubic-bezier(0.25, 1, 0.5, 1) infinite;
       }
 
       @keyframes melt {
         0% {
           transform: scaleY(1);
-        }
-        10% {
-          transform: scaleY(1.1);
-        }
-        20% {
-          transform: scaleY(1.3);
-        }
-        30% {
-          transform: scaleY(1.5);
-        }
-        40% {
-          transform: scaleY(1.7) rotate(-0.5deg);
+          opacity: 1;
         }
         50% {
-          transform: scaleY(2) rotate(0.3deg);
-        }
-        60% {
-          transform: scaleY(2.3) rotate(-0.2deg);
-        }
-        70% {
-          transform: scaleY(2.5) rotate(0.5deg);
-        }
-        80% {
-          transform: scaleY(2.7) rotate(-0.3deg);
-        }
-        90% {
-          transform: scaleY(2.9) rotate(0.2deg);
+          transform: scaleY(1.8);
+          opacity: 1;
         }
         100% {
-          transform: scaleY(3) rotate(0deg);
+          transform: scaleY(2.5);
+          opacity: 1;
         }
       }
 
-      /* 컨트롤 */
-      .controls {
-        position: fixed;
-        bottom: 20px;
+      /* 타원형 웹캠 영역 */
+      .webcam-wrapper {
+        position: relative;
+        width: 80vw;
+        max-width: 600px;
+        aspect-ratio: 3 / 2;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.1);
         display: flex;
-        flex-direction: column;
-        gap: 10px;
-        width: 90%;
-        max-width: 400px;
-        z-index: 3;
+        align-items: center;
+        justify-content: center;
+        margin-top: 180px; /* 텍스트와 간격 확보 */
+        z-index: 1;
       }
 
-      input,
-      button {
+      #video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.7);
+        transform: scaleX(-1) scale(1.05); /* 좌우 반전 + 확대 */
+      }
+
+      /* 입력 필드 */
+      .controls {
+        margin-top: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 80%;
+        max-width: 400px;
+      }
+
+      input {
         font-family: 'Rubik Wet Paint', cursive;
         font-size: clamp(16px, 4vw, 24px);
         padding: 8px 16px;
         border-radius: 10px;
         outline: none;
-      }
-
-      input {
         background: rgba(0, 0, 0, 0.6);
         border: 2px solid #ff6600;
         color: white;
         text-align: center;
-      }
-
-      button {
-        background: #ff6600;
-        border: none;
-        color: black;
-        cursor: pointer;
-        transition: 0.3s;
-      }
-
-      button:hover {
-        background: #ffa500;
+        width: 100%;
       }
     </style>
   </head>
   <body>
-    <!-- 웹캠 -->
-    <video id="video" autoplay playsinline></video>
-
-    <!-- 텍스트 포스터 -->
+    <!-- 상단 텍스트 -->
     <div class="poster-container">
       <div id="poster" class="poster"></div>
     </div>
 
-    <!-- 컨트롤 -->
+    <!-- 웹캠 -->
+    <div class="webcam-wrapper">
+      <video id="video" autoplay playsinline></video>
+    </div>
+
+    <!-- 입력 컨트롤 -->
     <div class="controls">
       <input
         type="text"
         id="textInput"
         placeholder="Type your spooky text..."
       />
-      <button id="saveBtn">💀 Save PNG</button>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
       const poster = document.getElementById('poster');
       const input = document.getElementById('textInput');
       const video = document.getElementById('video');
-      const saveBtn = document.getElementById('saveBtn');
 
-      // 텍스트 입력
+      // 입력한 텍스트 표시
       input.addEventListener('input', () => {
         const text = input.value.toUpperCase();
         poster.innerHTML = '';
@@ -184,21 +154,11 @@
         });
       });
 
-      // 웹캠 시작
+      // 웹캠 시작 (좌우 반전)
       navigator.mediaDevices
         .getUserMedia({ video: true })
         .then((stream) => (video.srcObject = stream))
         .catch((err) => console.log('웹캠 오류:', err));
-
-      // PNG 저장
-      saveBtn.addEventListener('click', () => {
-        html2canvas(document.body, { backgroundColor: null }).then((canvas) => {
-          const link = document.createElement('a');
-          link.download = 'halloween_poster.png';
-          link.href = canvas.toDataURL('image/png');
-          link.click();
-        });
-      });
     </script>
   </body>
 </html>
