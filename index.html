@@ -5,60 +5,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Happy Halloween</title>
 
-    <!-- Rubik Wet Paint 폰트 -->
+    <!-- 폰트 -->
     <link
       href="https://fonts.googleapis.com/css2?family=Rubik+Wet+Paint&display=swap"
       rel="stylesheet"
     />
-
     <link
       href="https://fonts.googleapis.com/css2?family=Rubik+Iso&display=swap"
       rel="stylesheet"
     />
 
     <style>
-      body,
-      html {
+      html,
+      body {
         margin: 0;
         height: 100%;
-        font-family: 'Rubik Wet Paint', cursive;
         background: #000;
+        font-family: 'Rubik Wet Paint', cursive;
+        color: #fff5de;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
-        color: white;
         overflow: hidden;
       }
 
-      /* 타원형 웹캠 영역 */
-      .webcam-wrapper {
-        position: relative;
-        width: 80vw;
-        max-width: 600px;
-        aspect-ratio: 3 / 2;
-        overflow: hidden;
-        background: rgba(255, 255, 255, 0.1);
+      /* 배경 (GitHub raw URL로 교체 가능) */
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: url('https://raw.githubusercontent.com/사용자명/저장소명/브랜치명/이미지경로.png')
+          center/cover no-repeat;
+        opacity: 0.8;
+        z-index: -1;
+      }
+
+      /* 🎃 전체 컨테이너 */
+      .container {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: center;
-        margin-top: 180px;
-        z-index: 1;
-        border-radius: 20px;
+        justify-content: flex-start;
+        width: 100%;
+        height: 100%;
+        padding-top: 22vh; /* ✅ 전체를 아래로 내림 */
+        box-sizing: border-box;
+      }
+
+      /* 폴라로이드 프레임 */
+      .frame {
+        background: #ff6600;
+        width: 82vw;
+        max-width: 360px;
+        aspect-ratio: 3 / 4;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        border-radius: 6px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+        position: relative;
+      }
+
+      /* 비디오 영역 */
+      .video-area {
+        position: relative;
+        width: 90%;
+        height: 70%;
+        background: #000;
+        overflow: hidden;
+        border-radius: 6px;
+        margin-top: 6%;
       }
 
       #video {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        transform: scaleX(-1);
         filter: brightness(0.7);
-        transform: scaleX(-1) scale(1.05);
       }
 
-      /* 웹캠 안 텍스트 */
+      /* 흘러내리는 텍스트 */
       .poster-container {
         position: absolute;
-        top: 5%; /* 웹캠 안 위쪽 */
+        top: -8vh; /* ✅ 화면 상단에서 조금 아래로 */
         left: 50%;
         transform: translateX(-50%);
         width: 100%;
@@ -72,9 +104,10 @@
         flex-wrap: wrap;
         justify-content: center;
         align-items: flex-end;
-        font-size: clamp(40px, 10vw, 120px);
+        font-size: clamp(36px, 10vw, 90px);
         color: #ff6600;
         line-height: 0.9;
+        text-shadow: 0 0 20px rgba(255, 120, 0, 0.8);
       }
 
       .letter {
@@ -87,60 +120,76 @@
       @keyframes melt {
         0% {
           transform: scaleY(1);
-          opacity: 1;
         }
         50% {
           transform: scaleY(1.8);
-          opacity: 1;
         }
         100% {
           transform: scaleY(2.5);
-          opacity: 1;
         }
       }
 
-      /* 입력 필드 */
-      .controls {
-        margin-top: 40px;
+      /* 입력창 영역 */
+      .input-area {
+        width: 85%;
+        height: 12%;
+        background: #000;
+        border-radius: 8px;
+        margin-bottom: 5%;
         display: flex;
-        flex-direction: column;
         align-items: center;
-        width: 80%;
-        max-width: 400px;
+        justify-content: center;
       }
 
       input {
         font-family: 'Rubik Iso', Helvetica, Arial, sans-serif;
-        font-size: clamp(16px, 4vw, 24px);
-        padding: 8px 16px;
-        border-radius: 10px;
+        font-size: clamp(15px, 4vw, 20px);
+        background: transparent;
+        border: none;
         outline: none;
-        background: rgba(0, 0, 0, 0.6);
-        border: 2px solid #ff6600;
-        color: white;
+        color: #ff7621;
         text-align: center;
-        width: 100%;
+        width: 90%;
+      }
+
+      /* 📱 모바일 최적화 */
+      @media (max-width: 480px) {
+        .container {
+          padding-top: 26vh; /* 모바일에서 조금 더 아래 */
+        }
+        .poster-container {
+          top: -6vh;
+        }
+        .poster {
+          font-size: clamp(32px, 11vw, 80px);
+        }
+        .frame {
+          width: 85vw;
+        }
       }
     </style>
   </head>
-  <body>
-    <!-- 웹캠 -->
-    <div class="webcam-wrapper">
-      <video id="video" autoplay playsinline></video>
 
-      <!-- 웹캠 안 텍스트 -->
+  <body>
+    <div class="container">
+      <!-- 🎃 상단 흘러내리는 텍스트 -->
       <div class="poster-container">
         <div id="poster" class="poster"></div>
       </div>
-    </div>
 
-    <!-- 입력 컨트롤 -->
-    <div class="controls">
-      <input
-        type="text"
-        id="textInput"
-        placeholder="Type your spooky text..."
-      />
+      <!-- 폴라로이드 프레임 -->
+      <div class="frame">
+        <div class="video-area">
+          <video id="video" autoplay playsinline></video>
+        </div>
+        <div class="input-area">
+          <input
+            type="text"
+            id="textInput"
+            placeholder="Type your spooky text..."
+          />
+        </div>
+      </div>
     </div>
 
     <script>
@@ -148,9 +197,18 @@
       const input = document.getElementById('textInput');
       const video = document.getElementById('video');
 
-      // 입력한 텍스트 표시
+      // 초기 텍스트
+      const defaultText = 'HAPPY HALLOWEEN';
+      renderText(defaultText);
+
+      // 입력할 때마다 텍스트 갱신
       input.addEventListener('input', () => {
         const text = input.value.toUpperCase();
+        renderText(text || defaultText);
+      });
+
+      // 텍스트 렌더링 함수
+      function renderText(text) {
         poster.innerHTML = '';
         [...text].forEach((char, index) => {
           const span = document.createElement('span');
@@ -159,9 +217,9 @@
           span.style.animationDelay = `${index * 0.1 + Math.random() * 0.3}s`;
           poster.appendChild(span);
         });
-      });
+      }
 
-      // 웹캠 시작 (좌우 반전)
+      // 웹캠 실행
       navigator.mediaDevices
         .getUserMedia({ video: true })
         .then((stream) => (video.srcObject = stream))
@@ -169,5 +227,4 @@
     </script>
   </body>
 </html>
-
 
